@@ -1,19 +1,21 @@
-import { getEnv } from "../utils/get-env";
+import dotenv from "dotenv"
 
-const appConfig = () => ({
-  NODE_ENV: getEnv("NODE_ENV", "development"),
-  APP_ORIGIN: getEnv("APP_ORIGIN", "localhost"),
-  PORT: getEnv("PORT", "5000"),
-  BASE_PATH: getEnv("BASE_PATH", "/api/v1"),
-  MONGO_URI: getEnv("MONGO_URI"),
+
+dotenv.config()
+
+export const config = {
+  NODE_ENV:  process.env.NODE_ENV as string,
+  APP_ORIGIN: process.env.APP_ORIGIN!,
+  PORT: process.env.PORT!,
+  BASE_PATH: process.env.BASE_PATH!,
+  DATABASE_URL:process.env.DATABASE_URL,
+
   JWT: {
-    SECRET: getEnv("JWT_SECRET"),
-    EXPIRES_IN: getEnv("JWT_EXPIRES_IN", "15m"),
-    REFRESH_SECRET: getEnv("JWT_REFRESH_SECRET"),
-    REFRESH_EXPIRES_IN: getEnv("JWT_REFRESH_EXPIRES_IN", "30d"),
+    SECRET: process.env.JWT_SECRET as string,
+    EXPIRES_IN: process.env.JWT_SECRET_IN,
+    REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+    REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN,
   },
-  MAILER_SENDER: getEnv("MAILER_SENDER"),
-  RESEND_API_KEY: getEnv("RESEND_API_KEY"),
-});
-
-export const config = appConfig();
+  MAILER_SENDER: process.env.MAILER_SENDER,
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
+}
