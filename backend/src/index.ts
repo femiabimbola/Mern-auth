@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { config } from "./lib/config/app.config";
 import { db } from "./database/connectdb";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -19,7 +20,8 @@ app.get("/", (req: Request, res: Response) => {
 res.status(200).json({message:"Express Authentication"});
 });
 
-
+// To put error handler
+app.use(errorHandler);
 
 app.listen(config.PORT, async () => {
   console.log(`Server listening on port ${config.PORT} in ${config.NODE_ENV}`)
