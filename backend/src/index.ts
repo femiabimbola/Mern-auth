@@ -4,6 +4,7 @@ import cors from "cors";
 import { config } from "./lib/config/app.config";
 import { db } from "./database/connectdb";
 import { errorHandler } from "./middleware/errorHandler";
+import { HTTPSTATUS } from "./lib/config/httpStatus";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -17,7 +18,7 @@ app.use(
 );
 
 app.get("/", (req: Request, res: Response) => {
-res.status(200).json({message:"Express Authentication"});
+res.status(HTTPSTATUS.OK).json({message:"Express Authentication"});
 });
 
 // To put error handler

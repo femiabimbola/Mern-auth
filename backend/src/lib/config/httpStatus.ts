@@ -20,3 +20,6 @@ export const HTTPSTATUS = {
   SERVICE_UNAVAILABLE: 503,
   GATEWAY_TIMEOUT: 504,
 }
+
+
+export type HttpStatusCode = (typeof HTTPSTATUS)[keyof typeof HTTPSTATUS];
