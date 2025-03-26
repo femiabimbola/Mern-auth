@@ -18,6 +18,7 @@ export class AppError extends Error {
 }
 
 
+// You can make it object
 export const enum ErrorCode {
   AUTH_EMAIL_ALREADY_EXISTS = "AUTH_EMAIL_ALREADY_EXISTS",
   AUTH_INVALID_TOKEN = "AUTH_INVALID_TOKEN",
@@ -26,6 +27,8 @@ export const enum ErrorCode {
   AUTH_TOO_MANY_ATTEMPTS = "AUTH_TOO_MANY_ATTEMPTS",
   AUTH_UNAUTHORIZED_ACCESS = "AUTH_UNAUTHORIZED_ACCESS",
   AUTH_TOKEN_NOT_FOUND = "AUTH_TOKEN_NOT_FOUND",
+
+  BAD_REQUEST = "BAD_REQUEST",
 
   // Access Control Errors
   ACCESS_FORBIDDEN = "ACCESS_FORBIDDEN",

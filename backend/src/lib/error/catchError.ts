@@ -13,7 +13,10 @@ export class NotFoundException extends AppError {
 
 export class BadRequestException extends AppError {
   constructor(message = "Bad Request", errorCode?: ErrorCode) {
-    super(message, HTTPSTATUS.BAD_REQUEST, errorCode);
+    super(
+      message, 
+      HTTPSTATUS.BAD_REQUEST, 
+      errorCode || ErrorCode.BAD_REQUEST);
   }
 }
 

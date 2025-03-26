@@ -5,6 +5,7 @@ import { config } from "./lib/config/app.config";
 import { db } from "./database/connectdb";
 import { errorHandler } from "./middleware/errorHandler";
 import { HTTPSTATUS } from "./lib/config/httpStatus";
+import router from "./routes";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -20,6 +21,8 @@ app.use(
 app.get("/", (req: Request, res: Response) => {
 res.status(HTTPSTATUS.OK).json({message:"Express Authentication"});
 });
+
+app.use(router);
 
 // To put error handler
 app.use(errorHandler);
