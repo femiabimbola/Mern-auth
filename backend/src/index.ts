@@ -22,7 +22,7 @@ app.get("/", (req: Request, res: Response) => {
 res.status(HTTPSTATUS.OK).json({message:"Express Authentication"});
 });
 
-app.use(router);
+app.use(`${BASE_PATH}/`,router);
 
 // To put error handler
 app.use(errorHandler);
