@@ -24,6 +24,7 @@ res.status(HTTPSTATUS.OK).json({message:"Express Authentication"});
 
 app.use(`${BASE_PATH}/`,router);
 
+// https://github.com/TechWithEmmaYT/Advanced-MERN-Auths-2FA/blob/main/backend/src/database/models/user.model.ts
 // To put error handler
 app.use(errorHandler);
 
