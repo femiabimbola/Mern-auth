@@ -17,7 +17,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   isEmailVerified:boolean("isEmailVerified").default(false),
-  userPreferenceId: uuid("userPreferenceId").references(() => userPreference.id).notNull(),
+  userPreferenceId: uuid("userPreferenceId").references(() => userPreference.id),
   role: ROLE_ENUM("role").default("USER"),
   createdAt: timestamp("created_at", {withTimezone: true,}).defaultNow(),
 });
