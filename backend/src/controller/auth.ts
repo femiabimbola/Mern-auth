@@ -4,9 +4,11 @@ import { validationResult,matchedData } from "express-validator";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm"
 import { db } from "../database/connectdb";
-import { users } from "../database/schema";
+import { users, verificationCode } from "../database/schema";
 import { BadRequestException } from "../lib/error/catchError";
 import { ErrorCode } from "../lib/error/appError";
+import { fortyFiveMinutesFromNow } from "../lib/utils/dateTime";
+import { generateUniqueCode } from "../lib/utils/generateCode";
 
 export const createUser = async ( req: Request, res: any, next:NextFunction) => {
 
@@ -27,12 +29,27 @@ export const createUser = async ( req: Request, res: any, next:NextFunction) => 
           "User already exists with this email", ErrorCode.AUTH_EMAIL_ALREADY_EXISTS
         );
       }
+
     const hashedPassword = await hash(password, 10);
-    await db.insert(users).values({
+
+    const newUser = await db.insert(users).values({
       name,
       email,
       password: hashedPassword,
     });
+
+    const user = await db.select().from(users).where(eq(users.email, email)).limit(1)
+    
+    const userId = user[0].id
+
+    const code = generateUniqueCode()
+    const expiredAt = fortyFiveMinutesFromNow() 
+
+    const verification =  await db.insert(verificationCode).values({
+     userId, code, type:"EMAIL_VERIFICATION", expiredAt
+    })
+  
+   
     
     res.status(HTTPSTATUS.CREATED).json({
       message: "User registered successfully"
