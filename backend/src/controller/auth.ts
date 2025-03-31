@@ -4,7 +4,7 @@ import { validationResult,matchedData } from "express-validator";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm"
 import { db } from "../database/connectdb";
-import { users, verificationCode } from "../database/schema";
+import { users, verificationCode as verificationCodeModel } from "../database/schema";
 import { BadRequestException } from "../lib/error/catchError";
 import { ErrorCode } from "../lib/error/appError";
 import { fortyFiveMinutesFromNow } from "../lib/utils/dateTime";
@@ -39,20 +39,19 @@ export const createUser = async ( req: Request, res: any, next:NextFunction) => 
     });
 
     const user = await db.select().from(users).where(eq(users.email, email)).limit(1)
-    
+
     const userId = user[0].id
 
     const code = generateUniqueCode()
-    const expiredAt = fortyFiveMinutesFromNow() 
+    // const expiredAt = fortyFiveMinutesFromNow() 
 
-    const verification =  await db.insert(verificationCode).values({
-     userId, code, type:"EMAIL_VERIFICATION", expiredAt
+    const verificationCode =  await db.insert(verificationCodeModel).values({
+     userId, code, type:"EMAIL_VERIFICATION", 
     })
-  
-   
     
     res.status(HTTPSTATUS.CREATED).json({
-      message: "User registered successfully"
+      message: "User registered successfully",
+      data: user[0].name
     })
   } catch (error) {
     next(error)

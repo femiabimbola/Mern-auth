@@ -39,5 +39,8 @@ export const verificationCode = pgTable("verificationCode", {
   code:text("code").unique().notNull(),
   type:text("type").notNull(),
   createdAt:timestamp("createdAt", {withTimezone: true,}).defaultNow(),
-  expiredAt:date("expiredAt").notNull()
+  // expiredAt:date("expiredAt").notNull()
+  expiredAt: timestamp("expiredAt", { withTimezone: true })
+  .default(sql`NOW() + INTERVAL '15 minutes'`)
+  .notNull()
 }) 
