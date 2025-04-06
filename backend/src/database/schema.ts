@@ -1,5 +1,5 @@
 
-import { pgTable, pgEnum, date, text, uuid, varchar, timestamp, boolean } from "drizzle-orm/pg-core"
+import { pgTable, pgEnum, text, uuid, varchar, timestamp, boolean } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 //  const ROLE_ENUM = pgEnum("role", ["USER", "ADMIN"]);
@@ -39,7 +39,6 @@ export const verificationCode = pgTable("verificationCode", {
   code:text("code").unique().notNull(),
   type:text("type").notNull(),
   createdAt:timestamp("createdAt", {withTimezone: true,}).defaultNow(),
-  // expiredAt:date("expiredAt").notNull()
   expiredAt: timestamp("expiredAt", { withTimezone: true })
   .default(sql`NOW() + INTERVAL '15 minutes'`)
   .notNull()

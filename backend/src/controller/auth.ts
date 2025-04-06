@@ -4,7 +4,7 @@ import { validationResult,matchedData } from "express-validator";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm"
 import { db } from "../database/connectdb";
-import { users, verificationCode as verificationCodeModel } from "../database/schema";
+import { userPreference, users, verificationCode as verificationCodeModel } from "../database/schema";
 import { BadRequestException } from "../lib/error/catchError";
 import { ErrorCode } from "../lib/error/appError";
 import { fortyFiveMinutesFromNow } from "../lib/utils/dateTime";
@@ -31,6 +31,8 @@ export const createUser = async ( req: Request, res: any, next:NextFunction) => 
       }
 
     const hashedPassword = await hash(password, 10);
+
+    await db.insert(userPreference).values
 
     const newUser = await db.insert(users).values({
       name,
