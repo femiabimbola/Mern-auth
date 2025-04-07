@@ -13,6 +13,7 @@ import { BadRequestException } from "../lib/error/catchError";
 import { ErrorCode } from "../lib/error/appError";
 import { fortyFiveMinutesFromNow } from "../lib/utils/dateTime";
 import { generateUniqueCode } from "../lib/utils/generateCode";
+import { passwordSchema } from "../validator/auth";
 
 export const createUser = async (
   req: Request,
@@ -24,7 +25,8 @@ export const createUser = async (
     return res.status(400).json({ errors: errors.array() });
   }
   const data = matchedData(req);
-  const { name, email, password } = data;
+
+  const { name, email, password} = data
 
   try {
     const existingUser = await db
@@ -80,10 +82,17 @@ export const createUser = async (
 };
 
 
-export const loginUser = async (
-  req: Request,
-  res: any,
+export const loginUser = async (req: Request, res: any,
   next: NextFunction
 ) => {
+
+  const userAgent = req.headers["user-agent"];
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
   
+  const data = matchedData(req);
+  const { email, password} = data
+
+  console.log(email, password)
 }

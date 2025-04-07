@@ -36,3 +36,20 @@ export const createUserValidationSchema : Schema = {
   },
 };
 
+
+
+export const loginUserValidationSchema : Schema = {
+  email: {
+    notEmpty: { errorMessage: "Email cannot be empty" },
+    isEmail: { errorMessage: "Enter a valid email" },
+  },
+
+  password: {
+    notEmpty: { errorMessage: "Password cannot be empty" },
+    isLength: { options: { min: 6 }, errorMessage: "Password cannot be less than 6 characters" },
+    matches: {
+      options: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/,
+      errorMessage: "Password must contain at least a digit, symbol, uppercase, and lowercase",
+    },
+  },
+}
