@@ -23,7 +23,6 @@ export const createUser = async (
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
   const data = matchedData(req);
   const { name, email, password } = data;
 
@@ -42,23 +41,6 @@ export const createUser = async (
     }
 
     const hashedPassword = await hash(password, 10);
-
-    // const userPrefResult = await db
-    //   .insert(userPreference)
-    //   .values({
-    //     enable2FA: false,
-    //     emailNotification: false
-    //   })
-    //   .returning();
-
-    // const userPreferenceId = userPrefResult[0].id;
-
-    //  await db.insert(users).values({
-    //   name,
-    //   email,
-    //   password: hashedPassword,
-    //   userPreferenceId,
-    // }).returning();
 
     const newUser = await db.insert(users).values({
       name,
@@ -96,3 +78,12 @@ export const createUser = async (
     next(error);
   }
 };
+
+
+export const loginUser = async (
+  req: Request,
+  res: any,
+  next: NextFunction
+) => {
+  
+}
