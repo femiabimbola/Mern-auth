@@ -1,26 +1,24 @@
 
-import { pgTable, pgEnum, text, uuid, varchar, timestamp, boolean } from "drizzle-orm/pg-core"
+import { pgTable, pgEnum, json, text, uuid, varchar, timestamp, boolean } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
-//  const ROLE_ENUM = pgEnum("role", ["USER", "ADMIN"]);
 
-export const userPreference = pgTable("userPreference", {
-  id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
-  enable2FA: boolean("enable2FA").default(false),
-  emailNotification:boolean("emailNotification").default(false),
-  twoFactorSecret: text("twoFactorSecret")
-})
 
 export const users = pgTable("users", {
   id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
   name: varchar("name", { length: 255 }).notNull(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  isEmailVerified:boolean("isEmailVerified").default(false),
-  userPreferenceId: uuid("userPreferenceId").references(() => userPreference.id),
-  // role: ROLE_ENUM("role").default("USER"),
+  isEmailVerified: boolean("isEmailVerified").default(false),
+  userPreferences: json("userPreferences").default(
+    JSON.stringify({
+      enable2FA: false,
+      emailNotification: false,
+      twoFactorSecret: null,
+    })
+  ), // Embed preferences as a JSON object
   role: text("role").default("USER"),
-  createdAt: timestamp("created_at", {withTimezone: true,}).defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
 

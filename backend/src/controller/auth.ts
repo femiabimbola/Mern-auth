@@ -5,7 +5,7 @@ import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { db } from "../database/connectdb";
 import {
-  userPreference,
+  // userPreference,
   users,
   verificationCode as verificationCodeModel,
 } from "../database/schema";
@@ -43,22 +43,33 @@ export const createUser = async (
 
     const hashedPassword = await hash(password, 10);
 
-    const userPrefResult = await db
-      .insert(userPreference)
-      .values({
-        enable2FA: false,
-        emailNotification: false
-      })
-      .returning();
+    // const userPrefResult = await db
+    //   .insert(userPreference)
+    //   .values({
+    //     enable2FA: false,
+    //     emailNotification: false
+    //   })
+    //   .returning();
 
-    const userPreferenceId = userPrefResult[0].id;
+    // const userPreferenceId = userPrefResult[0].id;
 
-     await db.insert(users).values({
+    //  await db.insert(users).values({
+    //   name,
+    //   email,
+    //   password: hashedPassword,
+    //   userPreferenceId,
+    // }).returning();
+
+    const newUser = await db.insert(users).values({
       name,
       email,
       password: hashedPassword,
-      userPreferenceId,
-    }).returning();
+      userPreferences: {
+        enable2FA: false,
+        emailNotification: false, // Example of overriding the default
+        twoFactorSecret: null,
+      },
+    });
 
     const user = await db
       .select()
