@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { HTTPSTATUS } from "../lib/config/httpStatus";
 import { validationResult, matchedData } from "express-validator";
-import { hash } from "bcryptjs";
+import { hash, compare } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { db } from "../database/connectdb";
 import {
@@ -92,7 +92,22 @@ export const loginUser = async (req: Request, res: any,
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
   
   const data = matchedData(req);
-  const { email, password} = data
 
-  console.log(email, password)
+  const { email, password} = data
+  console.log(email, password, userAgent)
+
+  try {
+
+    const existingUser = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  
+    if (!existingUser[0]) return res.status(400).json({message: "User is not found, register"})
+    
+    const passwordsMatch = await compare(password, existingUser[0].password);
+
+    if (!passwordsMatch) return res.status(400).json({message: "Password did not match"})
+    
+    return res.status(200).json({message: "You have successfully signed in"})
+  } catch (error) {
+    next(error);
+  }
 }
