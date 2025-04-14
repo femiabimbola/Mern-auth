@@ -17,6 +17,7 @@ import jwt from 'jsonwebtoken';
 import { fortyFiveMinutesFromNow } from "../lib/utils/dateTime";
 import { generateUniqueCode } from "../lib/utils/generateCode";
 import { passwordSchema } from "../validator/auth";
+import { getAccessTokenCookieOptions, getRefreshTokenCookieOptions } from "../lib/utils/cookies";
 
 export const createUser = async (
   req: Request,
@@ -98,9 +99,9 @@ export const loginUser = async (req: Request, res: any,
 
   const { email, password} = data
   // console.log(email, password, userAgent)
+  const mfaRequired = false
 
   try {
-
     const existingUser = await db.select().from(users).where(eq(users.email, email)).limit(1);
   
     if (!existingUser[0]) return res.status(400).json({message: "User is not found, register"})
@@ -122,8 +123,10 @@ export const loginUser = async (req: Request, res: any,
        config.JWT.REFRESH_SECRET,
      { audience: ["user"], expiresIn: config.JWT.REFRESH_EXPIRES_IN});
 
-    
-    return res.status(200).json({message: "You have successfully signed in"})
+    return res
+    .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
+    .cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions())
+    .status(HTTPSTATUS.OK).json({message: "You have successfully signed in", data: existingUser[0]})
   } catch (error) {
     next(error);
   }
