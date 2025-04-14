@@ -5,12 +5,15 @@ import { hash, compare } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { db } from "../database/connectdb";
 import {
+  session,
   // userPreference,
   users,
   verificationCode as verificationCodeModel,
 } from "../database/schema";
 import { BadRequestException } from "../lib/error/catchError";
 import { ErrorCode } from "../lib/error/appError";
+import { config } from "../lib/config/app.config";
+import jwt from 'jsonwebtoken';
 import { fortyFiveMinutesFromNow } from "../lib/utils/dateTime";
 import { generateUniqueCode } from "../lib/utils/generateCode";
 import { passwordSchema } from "../validator/auth";
@@ -94,7 +97,7 @@ export const loginUser = async (req: Request, res: any,
   const data = matchedData(req);
 
   const { email, password} = data
-  console.log(email, password, userAgent)
+  // console.log(email, password, userAgent)
 
   try {
 
@@ -103,8 +106,22 @@ export const loginUser = async (req: Request, res: any,
     if (!existingUser[0]) return res.status(400).json({message: "User is not found, register"})
     
     const passwordsMatch = await compare(password, existingUser[0].password);
-
     if (!passwordsMatch) return res.status(400).json({message: "Password did not match"})
+
+    const sessiondb = await db.insert(session).values({
+      userId: existingUser[0].id, userAgent
+    }).returning()
+    
+    const accessToken = jwt.sign(
+      {userId: existingUser[0].id, sessionId: sessiondb[0].id,},
+       config.JWT.SECRET,
+     { audience: ["user"], expiresIn: config.JWT.EXPIRES_IN});
+
+     const refreshToken = jwt.sign(
+       {sessionId: sessiondb[0].id,},
+       config.JWT.REFRESH_SECRET,
+     { audience: ["user"], expiresIn: config.JWT.REFRESH_EXPIRES_IN});
+
     
     return res.status(200).json({message: "You have successfully signed in"})
   } catch (error) {

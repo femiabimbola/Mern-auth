@@ -12,9 +12,9 @@ export const config = {
 
   JWT: {
     SECRET: process.env.JWT_SECRET as string,
-    EXPIRES_IN: process.env.JWT_SECRET_IN,
-    REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-    REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN,
+    EXPIRES_IN: process.env.JWT_SECRET_IN as any,
+    REFRESH_SECRET: process.env.JWT_REFRESH_SECRET as string,
+    REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN as any,
   },
   MAILER_SENDER: process.env.MAILER_SENDER,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
