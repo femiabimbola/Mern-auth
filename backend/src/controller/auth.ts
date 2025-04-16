@@ -113,15 +113,19 @@ export const loginUser = async (req: Request, res: any,
       userId: existingUser[0].id, userAgent
     }).returning()
     
+  
     const accessToken = jwt.sign(
       {userId: existingUser[0].id, sessionId: sessiondb[0].id,},
        config.JWT.SECRET,
-     { audience: ["user"], expiresIn: config.JWT.EXPIRES_IN});
+     { audience: ["user"], expiresIn: 36000});
+    //   { audience: ["user"], expiresIn: config.JWT.EXPIRES_IN});
+
 
      const refreshToken = jwt.sign(
        {sessionId: sessiondb[0].id,},
        config.JWT.REFRESH_SECRET,
-     { audience: ["user"], expiresIn: config.JWT.REFRESH_EXPIRES_IN});
+     { audience: ["user"], expiresIn:67000});
+    //   { audience: ["user"], expiresIn: config.JWT.REFRESH_EXPIRES_IN});
 
     return res
     .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
