@@ -1,4 +1,4 @@
-# A Codebase on Authentication using Expresss and Passport
+# A Codebase on Authentication using Expresss and Jsonwebtoken
 
 
 ### For Backend
